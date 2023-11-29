@@ -7,7 +7,7 @@ from panda_gym.envs.core import PyBulletRobot
 from panda_gym.pybullet import PyBullet
 
 
-class Panda(PyBulletRobot):
+class PandaIK(PyBulletRobot):
     """Panda robot in PyBullet.
 
     Args:
@@ -23,17 +23,12 @@ class Panda(PyBulletRobot):
         sim: PyBullet,
         block_gripper: bool = False,
         base_position: Optional[np.ndarray] = None,
-        control_type: str = "ee_plane",
+        control_type: str = "ee",
     ) -> None:
         base_position = base_position if base_position is not None else np.zeros(3)
         self.block_gripper = block_gripper
         self.control_type = control_type
-        n_action = 7
-        if self.control_type == "ee":
-            n_action = 3  # control (x, y z) if "ee", else, control the 7 joints
-        elif self.control_type == "ee_plane":
-            n_action = 2
-
+        n_action = 3 if self.control_type == "ee" else 7  # control (x, y z) if "ee", else, control the 7 joints
         n_action += 0 if self.block_gripper else 1
         action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float32)
         super().__init__(
@@ -55,13 +50,13 @@ class Panda(PyBulletRobot):
         self.sim.set_spinning_friction(self.body_name, self.fingers_indices[1], spinning_friction=0.001)
 
     def set_action(self, action: np.ndarray) -> None:
+
+
+
         action = action.copy()  # ensure action don't change
         action = np.clip(action, self.action_space.low, self.action_space.high)
         if self.control_type == "ee":
             ee_displacement = action[:3]
-            target_arm_angles = self.ee_displacement_to_target_arm_angles(ee_displacement)
-        elif self.control_type == "ee_plane":
-            ee_displacement = action[:2] + [0]
             target_arm_angles = self.ee_displacement_to_target_arm_angles(ee_displacement)
         else:
             arm_joint_ctrl = action[:7]
@@ -81,7 +76,7 @@ class Panda(PyBulletRobot):
         """Compute the target arm angles from the end-effector displacement.
 
         Args:
-            ee_displacement (np.ndarray): End-effector displacement, as (dx, dy, dz).
+            ee_displacement (np.ndarray): End-effector displacement, as (dx, dy, dy).
 
         Returns:
             np.ndarray: Target arm angles, as the angles of the 7 arm joints.
