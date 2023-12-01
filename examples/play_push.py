@@ -11,9 +11,11 @@ env = gym.make("PandaPushSafetyDagger-v3")
 
 play(gym.make("PandaPushSafetyDagger-v3", render_mode="rgb_array"), keys_to_action={
                                                "w": np.array([ 0.5,  0.,  0.]),
-                                               "s": np.array([-0.5,  0.,  0.]),
+                                               "x": np.array([-0.5,  0.,  0.]),
                                                "a": np.array([  0.,-0.5,  0.]),
                                                "d": np.array([  0., 0.5,  0.]),
-                                               "q": np.array([  0.,  0., -0.5]),
-                                               "e": np.array([  0.,  0., -0.5]),
+                                               "q": np.array([  0.35,  -0.35,  0.]),
+                                               "e": np.array([  0.35,  0.35,  0.]),
+                                               "z": np.array([  -0.35,  -0.35,  0.]),
+                                               "c": np.array([  -0.35,  0.35,  0.]),
                                               }, noop=np.array([0,0,0]))
