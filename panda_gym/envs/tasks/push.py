@@ -29,9 +29,10 @@ class Push(Task):
     def _create_scene(self) -> None:
         self.sim.create_plane(z_offset=-0.4)
         self.sim.create_table(length=1.1, width=0.7, height=0.4, x_offset=-0.3)
-        self.sim.create_box(
+        self.sim.create_cylinder(
             body_name="object",
-            half_extents=np.ones(3) * self.object_size / 2,
+            radius=self.object_size / 2,
+            height=self.object_size,
             mass=1.0,
             position=np.array([0.0, 0.0, self.object_size / 2]),
             rgba_color=np.array([0.1, 0.9, 0.1, 1.0]),
